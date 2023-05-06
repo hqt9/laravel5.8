@@ -25,3 +25,23 @@ Route::get('/', function () {
 Route::get('/test', function () {
     $exitCode = Artisan::call('command:test');
 });
+
+use Illuminate\Support\Facades\Cache;
+Route::get('/cache', function () {
+    return Cache::get('key');
+});
+
+
+Route::get('3', function () {
+    return 'OK';
+});
+
+Route::get('2', 'TestController@index');
+
+Route::get('1', function () {
+    echo 1 . PHP_EOL;
+    echo 2 . PHP_EOL;
+    // trigger_error('b', E_ALL);
+    echo 3 . PHP_EOL;
+    echo 4 . PHP_EOL;
+});
