@@ -21,7 +21,10 @@ define('LARAVEL_START', microtime(true));
 |
 */
 
+// 载入 Composer 生成的自动加载设置
 require __DIR__.'/../vendor/autoload.php';
+// 执行完成后，不会加载任何类
+
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +38,25 @@ require __DIR__.'/../vendor/autoload.php';
 |
 */
 
+// 获取 Laravel 应用实例
 $app = require_once __DIR__.'/../bootstrap/app.php';
+/**
+ * 执行完成后会加载以下类
+    Illuminate\Foundation\Application
+    Illuminate\Container\Container
+    Illuminate\Contracts\Container\Container
+    Psr\Container\ContainerInterface
+    Illuminate\Contracts\Foundation\Application
+    Symfony\Component\HttpKernel\HttpKernelInterface
+    Illuminate\Foundation\PackageManifest
+    Illuminate\Filesystem\Filesystem
+    Illuminate\Support\Traits\Macroable
+    Illuminate\Events\EventServiceProvider
+    Illuminate\Support\ServiceProvider
+    Illuminate\Support\Arr
+    Illuminate\Log\LogServiceProvider
+    Illuminate\Routing\RoutingServiceProvider
+ */
 
 /*
 |--------------------------------------------------------------------------
@@ -49,9 +70,28 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 |
 */
 
+/**
+ * 初始化 HTTP 内核
+ *
+ */
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+/**
+ * 执行完成后会加载以下类
+App\Http\Kernel
+Illuminate\Foundation\Http\Kernel
+Illuminate\Contracts\Http\Kernel
+Illuminate\Routing\Router
+Illuminate\Contracts\Routing\Registrar
+Illuminate\Contracts\Routing\BindingRegistrar
+Illuminate\Events\Dispatcher
+Illuminate\Contracts\Events\Dispatcher
+Illuminate\Routing\RouteCollection
+ */
 
+
+// HTTP 内核处理 HTTP 请求：获取一个 Request，返回一个 Response，可以把该内核想象作一个代表整个应用的大黑盒子，输入 HTTP 请求，返回 HTTP 响应
 $response = $kernel->handle(
+    // 捕获用户请求
     $request = Illuminate\Http\Request::capture()
 );
 

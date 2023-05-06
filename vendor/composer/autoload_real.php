@@ -50,7 +50,7 @@ class ComposerAutoloaderInit627a53d2b352678d6739e41d47c0db85
             }
         }
 
-        $loader->register(true);
+        $loader->register(true); // 注册自动加载器
 
         if ($useStaticLoader) {
             $includeFiles = Composer\Autoload\ComposerStaticInit627a53d2b352678d6739e41d47c0db85::$files;

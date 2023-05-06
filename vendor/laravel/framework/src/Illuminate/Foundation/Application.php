@@ -759,6 +759,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
     public function make($abstract, array $parameters = [])
     {
         $abstract = $this->getAlias($abstract);
+        // var_dump($abstract);die();// Illuminate\Contracts\Http\Kernel
 
         if ($this->isDeferredService($abstract) && ! isset($this->instances[$abstract])) {
             $this->loadDeferredProvider($abstract);
@@ -1125,7 +1126,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
      *
      * @return void
      */
-    public function registerCoreContainerAliases()
+    public function registerCoreContainerAliases()//
     {
         foreach ([
             'app'                  => [self::class, \Illuminate\Contracts\Container\Container::class, \Illuminate\Contracts\Foundation\Application::class, \Psr\Container\ContainerInterface::class],

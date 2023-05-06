@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
-class MiddlewareServiceProvider extends ServiceProvider
+class MiddlewareServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
      * Register services.

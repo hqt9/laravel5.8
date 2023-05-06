@@ -97,10 +97,13 @@ class Pipeline implements PipelineContract
      */
     public function then(Closure $destination)
     {
+        // 生成嵌套闭包
         $pipeline = array_reduce(
             array_reverse($this->pipes), $this->carry(), $this->prepareDestination($destination)
+            // 中间件 middleware,       闭包 function(){}, 初始值 （接受 $passable 当作 $request 进行传值处理）
         );
 
+        // 执行闭包，先进后出的方式
         return $pipeline($this->passable);
     }
 

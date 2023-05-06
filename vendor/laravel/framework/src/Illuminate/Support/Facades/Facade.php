@@ -175,6 +175,7 @@ abstract class Facade
         if (static::$app) {
             return static::$resolvedInstance[$name] = static::$app[$name];
         }
+        // die('8s879879');
     }
 
     /**

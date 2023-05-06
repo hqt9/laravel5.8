@@ -631,6 +631,12 @@ class Router implements RegistrarContract, BindingRegistrar
      */
     protected function findRoute($request)
     {
+        /**
+         * 路由器会将请求 URL 路径与应用注册的所有路由进行匹配，
+         * 如果有匹配的路由，则先收集该路由所分配的所有路由中间件，
+         * 通过这些路由中间件对请求进行过滤，所有路由中间件校验通过才会运行对应的匿名函数或控制器方法，执行相应的请求处理逻辑，
+         * 最后准备好待发送给客户端的响应。
+         */
         $this->current = $route = $this->routes->match($request);
 
         $this->container->instance(Route::class, $route);
@@ -671,6 +677,7 @@ class Router implements RegistrarContract, BindingRegistrar
                                 $this->container->make('middleware.disable') === true;
 
         $middleware = $shouldSkipMiddleware ? [] : $this->gatherRouteMiddleware($route);
+        // var_dump($middleware);die('sdsds');
 
         return (new Pipeline($this->container))
                         ->send($request)

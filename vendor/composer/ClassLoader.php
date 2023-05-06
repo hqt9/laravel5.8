@@ -342,6 +342,8 @@ class ClassLoader
      */
     public function loadClass($class)
     {
+        // 这里的类是从哪里来的？ -> 是在调用类时，通过注册的自动加载器进行自动加载的
+        // echo($class . '<br>');
         if ($file = $this->findFile($class)) {
             includeFile($file);
 
@@ -375,6 +377,7 @@ class ClassLoader
         }
 
         $file = $this->findFileWithExtension($class, '.php');
+        // die($file);
 
         // Search for Hack files if we are running on HHVM
         if (false === $file && defined('HHVM_VERSION')) {
@@ -414,9 +417,12 @@ class ClassLoader
             while (false !== $lastPos = strrpos($subPath, '\\')) {
                 $subPath = substr($subPath, 0, $lastPos);
                 $search = $subPath . '\\';
+                // var_dump(intval(isset($this->prefixDirsPsr4[$search])) . ':' . $search);
                 if (isset($this->prefixDirsPsr4[$search])) {
+                    // var_dump($this->prefixDirsPsr4[$search]);
                     $pathEnd = DIRECTORY_SEPARATOR . substr($logicalPathPsr4, $lastPos + 1);
                     foreach ($this->prefixDirsPsr4[$search] as $dir) {
+                        // die($dir . $pathEnd);
                         if (file_exists($file = $dir . $pathEnd)) {
                             return $file;
                         }

@@ -110,6 +110,7 @@ class Kernel implements KernelContract
      */
     public function handle($request)
     {
+        // var_dump('ddddd');die();
         try {
             $request->enableHttpMethodParameterOverride();
 
@@ -145,7 +146,7 @@ class Kernel implements KernelContract
 
         $this->bootstrap();
 
-        return (new Pipeline($this->app))
+        return (new Pipeline($this->app))//
                     ->send($request)
                     ->through($this->app->shouldSkipMiddleware() ? [] : $this->middleware)
                     ->then($this->dispatchToRouter());
@@ -204,6 +205,8 @@ class Kernel implements KernelContract
             $this->gatherRouteMiddleware($request),
             $this->middleware
         );
+        // echo json_encode($middlewares);
+        // die();
 
         foreach ($middlewares as $middleware) {
             if (! is_string($middleware)) {

@@ -200,6 +200,8 @@ class Route
     protected function runCallable()
     {
         $callable = $this->action['uses'];
+        // var_dump(new ReflectionFunction($this->action['uses']));
+        // die('你好');
 
         return $callable(...array_values($this->resolveMethodDependencies(
             $this->parametersWithoutNulls(), new ReflectionFunction($this->action['uses'])

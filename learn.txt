@@ -1,0 +1,56 @@
+index.php （入口）
+    1 载入 Composer 生成的自动加载设置，自动加载 composer 依赖
+        1.1 设置依赖关系，【vendor/composer/autoload_real.php:35】
+
+        1.2 注册自动加载器，spl_autoload_register() ，【vendor/composer/autoload_real.php:53】
+            当使用尚未被定义的类（class）和接口（interface）时会自动去加载 -> 先定位文件位置，再 include 引入
+
+    2 获取 Laravel 应用实例
+        bootstrap/app.php:14
+
+    3 初始化 HTTP 内核
+        vendor/laravel/framework/src/Illuminate/Foundation/Application.php:759
+
+    4 处理 HTTP 请求
+        4.1 通过 ($_GET, $_POST, [], $_COOKIE, $_FILES, $_SERVER) 创建 HTTP Request 对象，【vendor/symfony/http-foundation/Request.php:293】
+
+        4.2 创建一个 HTTP Request 对象的副本，深拷贝【vendor/laravel/framework/src/Illuminate/Http/Request.php:59】
+
+        4.3 调用 HTTP 内核的 handle 方法【vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:117】
+            4.3.1 注册 request 实例，并清除掉旧的【vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:143】
+
+            4.3.2 在发送请求到路由之前，先初始化整个应用【vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:163, $bootstrappers】
+                A.1 通过类名就能窥探出对应的操作意图，分别是加载环境变量和全局配置、配置异常处理逻辑、
+                    注册门面和服务提供者（根据 config/app.php 中的 providers 和 alias 配置值）、
+                    以及执行所有已注册服务提供者的 boot 方法。
+
+            4.3.3 使用管道进行处理【vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:149】
+                A.1 先生成嵌套闭包方法，再执行闭包（先进后出的方式）【vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:98】
+                    先执行服务中间件【app/Http/Kernel.php:16, $middleware】，通过后继续 next()
+                    ...
+                    最后执行路由解析
+                A.2 Laravel 框架以管道模式来处理 HTTP 请求，首先通过全局中间件对请求进行处理，如果返回 false 直接退出，不会做路由解析处理。
+
+                A.3 全局中间件都校验通过才会将请求分发到路由器进行处理，
+                    路由器会将请求 URL 路径与应用注册的所有路由进行匹配，
+                    如果有匹配的路由，则先收集该路由所分配的所有路由中间件，
+                    通过这些路由中间件对请求进行过滤，所有路由中间件校验通过才会运行对应的匿名函数或控制器方法，执行相应的请求处理逻辑，
+                    最后准备好待发送给客户端的响应。
+
+        4.4 解析并执行路由【vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:177】
+            4.4.1 将 $request 解析为 Route 对象【vendor/laravel/framework/src/Illuminate/Routing/Router.php:632】
+            4.4.2 执行路由 runRoute
+                A.1 执行路由中间件【app/Http/Kernel.php:30, $middlewareGroups.web】，处理 $request（与上面的中间件不同）
+
+                A.2 执行对应方法【vendor/laravel/framework/src/Illuminate/Routing/Route.php:170】
+                    B.1 如果是 controller 方法，则执行对应 runController
+                        执行 $controller->{$method}($params);
+
+                    B.2 否则执行 runCallable 执行
+                        调用 new ReflectionFunction($callable) 类获取函数的参数信息
+                        执行 $callable($params);
+
+spl_autoload_register 函数：
+    可以注册任意数量的自动加载器（可多次调用），
+    当使用尚未被定义的类（class）和接口（interface）时自动去加载。
+    通过注册自动加载器，脚本引擎在 PHP 出错失败前有了最后一个机会加载所需的类。

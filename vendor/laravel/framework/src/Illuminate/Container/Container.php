@@ -237,7 +237,7 @@ class Container implements ArrayAccess, ContainerContract
             $concrete = $this->getClosure($abstract, $concrete);
         }
 
-        $this->bindings[$abstract] = compact('concrete', 'shared');
+        $this->bindings[$abstract] = compact('concrete', 'shared');//
 
         // If the abstract type was already resolved in this container we'll fire the
         // rebound listener so that any objects which have already gotten resolved
@@ -402,6 +402,8 @@ class Container implements ArrayAccess, ContainerContract
         // we will fire the rebound callbacks registered with the container and it
         // can be updated with consuming classes that have gotten resolved here.
         $this->instances[$abstract] = $instance;
+
+        // var_dump('11111 - ' . $abstract);
 
         if ($isBound) {
             $this->rebound($abstract);
@@ -643,7 +645,10 @@ class Container implements ArrayAccess, ContainerContract
      */
     protected function resolve($abstract, $parameters = [], $raiseEvents = true)
     {
+        //$isCache = $abstract == 'cache' ? 1 : 0;
         $abstract = $this->getAlias($abstract);
+
+        //if ($isCache) var_dump($abstract);
 
         $needsContextualBuild = ! empty($parameters) || ! is_null(
             $this->getContextualConcrete($abstract)
@@ -659,6 +664,7 @@ class Container implements ArrayAccess, ContainerContract
         $this->with[] = $parameters;
 
         $concrete = $this->getConcrete($abstract);
+        //if ($isCache) var_dump($concrete);
 
         // We're ready to instantiate an instance of the concrete type registered for
         // the binding. This will instantiate the types, as well as resolve any of
