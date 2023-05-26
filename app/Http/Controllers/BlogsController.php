@@ -20,7 +20,7 @@ class BlogsController extends Controller
 
             return ['code' => 200, 'message' => 'Success', 'data' => $result];
         } catch (\Exception $e) {
-            return ['code' => 0, 'message' => 'Fail'];
+            return ['code' => 0, 'message' => 'Fail: ' . $e->getMessage()];
         }
     }
 

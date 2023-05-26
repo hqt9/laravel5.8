@@ -3,12 +3,19 @@
 namespace App\Service;
 
 use App\Model\Blogs;
+use Illuminate\Support\Facades\Redis;
 
 class BlogsService
 {
 
     public static function list($param)
     {
+        // $key = 'blogList';
+        // $result = Redis::get($key);
+        // if (!empty($result)) {
+        //     return @json_decode($result, true);
+        // }
+
         $query = Blogs::query()->where(['status' => 1]);
 
         if (!empty($param['author']))
@@ -32,6 +39,8 @@ class BlogsService
 
         $list = $query->orderByDesc('updated_at')->orderByDesc('id')->get();
 
+        // Redis::setex($key, 10, json_encode(['total' => $total, 'list' => $list]));
+        // Redis::set($key, json_encode(['total' => $total, 'list' => $list]));
         return ['total' => $total, 'list' => $list];
     }
 
