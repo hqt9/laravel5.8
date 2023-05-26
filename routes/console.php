@@ -16,3 +16,11 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+/**
+ * php artisan list
+ * php artisan help build
+ */
+Artisan::command('build {project}', function ($project) {
+    $this->info("Building {$project}!");
+})->describe('Build the project');
