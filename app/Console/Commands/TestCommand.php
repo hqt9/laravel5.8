@@ -37,7 +37,8 @@ class TestCommand extends Command
      */
     public function handle()
     {
-        echo('How are you !');
+        echo 'How are you !' . PHP_EOL;
+        // sleep(10);
         return true;
     }
 }
