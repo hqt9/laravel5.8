@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Cache\CacheManager;
+use App\Jobs\ProcessPodcast;
 
 class TestController extends Controller
 {
@@ -31,5 +32,13 @@ class TestController extends Controller
         // echo ' TEST ';
 
         // return response()->jsonp();
+
+        echo 'sdf2345';
+        // ProcessPodcast::dispatchNow();
+
+        ProcessPodcast::dispatch()
+            // ->onQueue('processing')
+            // ->delay(now()->addMinutes(5))
+        ;
     }
 }
